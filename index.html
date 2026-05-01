@@ -19,338 +19,91 @@
   --radius: 10px;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  min-height: 100vh;
-  padding: 16px;
-  line-height: 1.5;
-}
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; min-height: 100vh; padding: 16px; line-height: 1.5; }
 .container { max-width: 680px; margin: 0 auto; }
-.header {
-  text-align: center;
-  padding: 20px 0 16px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 16px;
-}
+.header { text-align: center; padding: 14px 0 12px; border-bottom: 1px solid var(--border); margin-bottom: 12px; position: relative; }
 .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
-.header .badge {
-  display: inline-block;
-  margin-top: 4px;
-  font-size: 10px;
-  color: var(--muted);
-  background: var(--input-bg);
-  padding: 4px 10px;
-  border-radius: 20px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.progress-wrap {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  margin-bottom: 16px;
-  position: relative;
-  padding: 0 10px;
-}
-.progress-wrap::before {
-  content: '';
-  position: absolute;
-  top: 13px;
-  left: 14px;
-  right: 14px;
-  height: 2px;
-  background: var(--border);
-  z-index: 0;
-}
-.progress-fill {
-  position: absolute;
-  top: 13px;
-  left: 14px;
-  height: 2px;
-  background: var(--accent);
-  z-index: 1;
-  transition: width 0.5s ease;
-}
-.step-dot {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  z-index: 2;
-}
-.step-dot .circle {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 2px solid var(--border);
-  background: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--muted);
-  transition: all 0.3s;
-}
+.header .badge { display: inline-block; margin-top: 2px; font-size: 10px; color: var(--muted); background: var(--input-bg); padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; }
+.btn-new-entity { position: absolute; right: 0; top: 8px; padding: 8px 14px; font-size: 11px; font-weight: 600; background: rgba(255,255,255,0.06); color: #fff; border: 1px solid rgba(255,255,255,0.15); border-radius: 7px; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.btn-new-entity:hover { background: rgba(255,255,255,0.10); }
+.progress-wrap { display: flex; align-items: center; gap: 0; margin-bottom: 14px; position: relative; padding: 0 8px; }
+.progress-wrap::before { content: ''; position: absolute; top: 13px; left: 14px; right: 14px; height: 2px; background: var(--border); z-index: 0; }
+.progress-fill { position: absolute; top: 13px; left: 14px; height: 2px; background: var(--accent); z-index: 1; transition: width 0.5s ease; }
+.step-dot { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; z-index: 2; }
+.step-dot .circle { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--border); background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: var(--muted); transition: all 0.3s; }
 .step-dot.done .circle { background: var(--accent); border-color: var(--accent); color: #000; }
 .step-dot.current .circle { border-color: #fff; color: #fff; }
-.step-dot .label {
-  font-size: 7px;
-  color: var(--muted);
-  margin-top: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-align: center;
-}
-.step-dot.done .label,
-.step-dot.current .label { color: rgba(255,255,255,0.7); }
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-bottom: 10px;
-  transition: border-color 0.2s;
-}
+.step-dot .label { font-size: 7px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
+.step-dot.done .label, .step-dot.current .label { color: rgba(255,255,255,0.7); }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 8px; transition: border-color 0.2s; }
 .card.active { border-color: rgba(255,255,255,0.2); }
-.card h3 {
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.card h3 .num {
-  font-size: 9px;
-  background: var(--input-bg);
-  color: var(--muted);
-  padding: 3px 7px;
-  border-radius: 4px;
-  text-transform: uppercase;
-}
-input, select, textarea {
-  width: 100%;
-  padding: 10px 12px;
-  background: var(--input-bg);
-  border: 1px solid var(--border);
-  border-radius: 7px;
-  color: var(--text);
-  font-size: 13px;
-  font-family: inherit;
-  transition: border-color 0.2s;
-  margin-bottom: 7px;
-}
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: rgba(255,255,255,0.25);
-  background: rgba(255,255,255,0.04);
-}
+.card h3 { font-size: 13px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.card h3 .num { font-size: 9px; background: var(--input-bg); color: var(--muted); padding: 3px 7px; border-radius: 4px; text-transform: uppercase; }
+input, select { width: 100%; padding: 9px 11px; background: var(--input-bg); border: 1px solid var(--border); border-radius: 7px; color: var(--text); font-size: 12px; font-family: inherit; transition: border-color 0.2s; margin-bottom: 6px; }
+input:focus, select:focus { outline: none; border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.04); }
 select { appearance: none; cursor: pointer; }
-label {
-  display: block;
-  font-size: 10px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 3px;
-}
-.row { display: flex; gap: 7px; }
+label { display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.row { display: flex; gap: 6px; }
 .row > * { flex: 1; }
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 10px 18px;
-  border-radius: 7px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-.btn-primary {
-  background: #ffffff;
-  color: #0a0f1a;
-  width: 100%;
-}
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 5px; padding: 10px 16px; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; white-space: nowrap; font-family: inherit; }
+.btn-primary { background: #ffffff; color: #0a0f1a; width: 100%; }
 .btn-primary:hover { opacity: 0.9; }
 .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
-.result {
-  margin-top: 8px;
-  padding: 10px;
-  background: rgba(0,0,0,0.25);
-  border-radius: 7px;
-  font-size: 11px;
-  line-height: 1.6;
-  display: none;
-  word-break: break-all;
-}
+.result { margin-top: 6px; padding: 8px 10px; background: rgba(0,0,0,0.25); border-radius: 7px; font-size: 10px; line-height: 1.6; display: none; word-break: break-all; }
 .result.show { display: block; }
-.hash { color: var(--muted); font-family: 'SF Mono', monospace; font-size: 10px; }
-.info-box {
-  padding: 8px 12px;
-  border-radius: 7px;
-  font-size: 10px;
-  margin-top: 6px;
-}
+.hash { color: var(--muted); font-family: 'SF Mono', monospace; font-size: 9px; }
+.info-box { padding: 7px 10px; border-radius: 7px; font-size: 10px; margin-top: 5px; }
 .info-box.info { background: rgba(96,165,250,0.08); color: var(--info); border: 1px solid rgba(96,165,250,0.15); }
 .info-box.ok { background: rgba(74,222,128,0.06); color: var(--accent); border: 1px solid rgba(74,222,128,0.12); }
 .info-box.warn { background: rgba(245,158,11,0.06); color: var(--warn); border: 1px solid rgba(245,158,11,0.12); }
-.tabs { display: flex; gap: 0; margin-bottom: 14px; border-bottom: 1px solid var(--border); }
-.tab {
-  padding: 8px 14px;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--muted);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s;
-}
+.tabs { display: flex; gap: 0; margin-bottom: 12px; border-bottom: 1px solid var(--border); }
+.tab { padding: 8px 12px; font-size: 11px; font-weight: 500; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; background: none; font-family: inherit; }
 .tab.active { color: #fff; border-bottom-color: #fff; }
-.consent-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border);
-}
+.consent-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); }
 .consent-row:last-child { border-bottom: none; }
 .consent-row .consent-info { flex: 1; }
 .consent-row .consent-info strong { font-size: 11px; }
 .consent-row .consent-info p { font-size: 9px; color: var(--muted); margin-top: 1px; }
-.toggle {
-  width: 42px;
-  height: 22px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 11px;
-  cursor: pointer;
-  position: relative;
-  transition: background 0.3s;
-  flex-shrink: 0;
-}
+.toggle { width: 40px; height: 22px; background: rgba(255,255,255,0.1); border-radius: 11px; cursor: pointer; position: relative; transition: background 0.3s; flex-shrink: 0; }
 .toggle.on { background: var(--accent); }
-.toggle::after {
-  content: '';
-  width: 18px;
-  height: 18px;
-  background: #fff;
-  border-radius: 50%;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  transition: left 0.3s;
-}
-.toggle.on::after { left: 22px; }
-.summary-section { margin-bottom: 10px; }
-.summary-section h4 {
-  font-size: 9px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 5px;
-  padding-bottom: 3px;
-  border-bottom: 1px solid var(--border);
-}
-.summary-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  padding: 3px 0;
-}
+.toggle::after { content: ''; width: 18px; height: 18px; background: #fff; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: left 0.3s; }
+.toggle.on::after { left: 20px; }
+.summary-section { margin-bottom: 8px; }
+.summary-section h4 { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; padding-bottom: 2px; border-bottom: 1px solid var(--border); }
+.summary-row { display: flex; justify-content: space-between; font-size: 11px; padding: 2px 0; }
 .summary-row span:first-child { color: var(--muted); }
 .summary-row span:last-child { font-weight: 500; }
-.score {
-  text-align: center;
-  padding: 20px;
-  font-size: 20px;
-  font-weight: 700;
-  display: none;
-}
+.score { text-align: center; padding: 16px; font-size: 18px; font-weight: 700; display: none; }
 .score.show { display: block; }
-
-/* Predictive Dashboard Styles */
-.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
-.kpi-card { border-radius: 8px; padding: 12px 8px; text-align: center; background: var(--card); border: 1px solid var(--border); }
-.kpi-card .kpi-value { font-size: 22px; font-weight: 700; }
-.kpi-card .kpi-label { font-size: 8px; color: var(--muted); text-transform: uppercase; margin-top: 2px; letter-spacing: 0.5px; }
-.kpi-card.danger { border-color: rgba(248,113,113,0.2); background: rgba(248,113,113,0.05); }
-.kpi-card.danger .kpi-value { color: var(--danger); }
-.kpi-card.info-kpi { border-color: rgba(96,165,250,0.2); background: rgba(96,165,250,0.05); }
-.kpi-card.info-kpi .kpi-value { color: var(--info); }
-.kpi-card.ok-kpi { border-color: rgba(74,222,128,0.2); background: rgba(74,222,128,0.05); }
-.kpi-card.ok-kpi .kpi-value { color: var(--accent); }
-
-.entity-list-item {
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  cursor: pointer;
-  margin-bottom: 6px;
-  transition: all 0.2s;
-  text-align: left;
-  width: 100%;
-  color: var(--text);
-  font-family: inherit;
-}
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+.kpi-card { border-radius: 8px; padding: 10px 6px; text-align: center; background: var(--card); border: 1px solid var(--border); }
+.kpi-card .kpi-value { font-size: 20px; font-weight: 700; }
+.kpi-card .kpi-label { font-size: 8px; color: var(--muted); text-transform: uppercase; margin-top: 1px; }
+.entity-list-item { padding: 10px 12px; border-radius: 8px; background: var(--card); border: 1px solid var(--border); cursor: pointer; margin-bottom: 5px; transition: all 0.2s; text-align: left; width: 100%; color: var(--text); font-family: inherit; }
 .entity-list-item:hover { border-color: rgba(255,255,255,0.15); }
 .entity-list-item.selected { border-color: var(--accent); background: rgba(74,222,128,0.03); }
 .entity-list-item .e-name { font-size: 12px; font-weight: 600; }
 .entity-list-item .e-info { font-size: 9px; color: var(--muted); margin-top: 1px; }
-
-.risk-badge {
-  display: inline-block;
-  font-size: 8px;
-  padding: 3px 8px;
-  border-radius: 20px;
-  font-weight: 600;
-  border: 1px solid;
-}
+.risk-badge { display: inline-block; font-size: 8px; padding: 3px 7px; border-radius: 20px; font-weight: 600; border: 1px solid; }
 .risk-imminent { color: var(--danger); border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.08); }
 .risk-high { color: var(--warn); border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.08); }
 .risk-medium { color: var(--info); border-color: rgba(96,165,250,0.3); background: rgba(96,165,250,0.08); }
 .risk-low { color: var(--accent); border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.08); }
 .risk-none { color: var(--muted); border-color: var(--border); background: var(--card); }
-
-.action-card {
-  border-radius: 8px;
-  padding: 10px 12px;
-  margin-bottom: 6px;
-  border: 1px solid var(--border);
-  background: var(--card);
-}
+.action-card { border-radius: 7px; padding: 8px 10px; margin-bottom: 5px; border: 1px solid var(--border); background: var(--card); }
 .action-card.immediate { border-color: rgba(248,113,113,0.2); background: rgba(248,113,113,0.03); }
 .action-card.short { border-color: rgba(245,158,11,0.2); background: rgba(245,158,11,0.03); }
 .action-card .act-label { font-size: 11px; font-weight: 600; }
-.action-card .act-desc { font-size: 9px; color: var(--muted); margin-top: 3px; }
-.action-card .act-link {
-  display: inline-block;
-  font-size: 9px;
-  font-weight: 600;
-  color: rgba(255,255,255,0.6);
-  background: rgba(255,255,255,0.04);
-  padding: 5px 10px;
-  border-radius: 5px;
-  margin-top: 6px;
-  text-decoration: none;
-  transition: background 0.2s;
-}
-.action-card .act-link:hover { background: rgba(255,255,255,0.08); }
-
-.trend-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
-.trend-card { border-radius: 7px; padding: 10px; background: var(--card); border: 1px solid var(--border); }
+.action-card .act-desc { font-size: 9px; color: var(--muted); margin-top: 2px; }
+.action-card .act-link { display: inline-block; font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.04); padding: 4px 8px; border-radius: 5px; margin-top: 4px; text-decoration: none; }
+.trend-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; }
+.trend-card { border-radius: 7px; padding: 8px; background: var(--card); border: 1px solid var(--border); }
 .trend-card .trend-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.7); }
-.trend-card .trend-value { font-size: 16px; font-weight: 700; margin: 3px 0; }
-.trend-card .trend-sub { font-size: 9px; color: var(--muted); }
-.section-title { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
-.empty-state { text-align: center; padding: 30px; color: var(--muted); font-size: 12px; }
-.empty-state .empty-icon { font-size: 36px; margin-bottom: 8px; }
+.trend-card .trend-value { font-size: 15px; font-weight: 700; margin: 2px 0; }
+.trend-card .trend-sub { font-size: 8px; color: var(--muted); }
+.section-title { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 10px 0 5px; padding-bottom: 3px; border-bottom: 1px solid var(--border); }
+.empty-state { text-align: center; padding: 24px; color: var(--muted); font-size: 12px; }
+.empty-state .empty-icon { font-size: 32px; margin-bottom: 6px; }
 </style>
 </head>
 <body>
@@ -358,16 +111,17 @@ label {
   <div class="header">
     <h1>ILERA MIB</h1>
     <span class="badge">Onboarding Réglementaire</span>
+    <button class="btn-new-entity" onclick="newEntity()">➕ Nouvelle entité</button>
   </div>
 
   <div class="tabs">
-    <div class="tab active" onclick="switchTab('onboarding')">Onboarding</div>
-    <div class="tab" onclick="switchTab('entities')">Entités (0)</div>
-    <div class="tab" onclick="switchTab('predictive')">Prédictif</div>
-    <div class="tab" onclick="switchTab('monitoring')">Monitoring</div>
+    <button class="tab active" onclick="switchTab('onboarding')">Onboarding</button>
+    <button class="tab" onclick="switchTab('entities')">Entités (0)</button>
+    <button class="tab" onclick="switchTab('predictive')">Prédictif</button>
+    <button class="tab" onclick="switchTab('monitoring')">Monitoring</button>
   </div>
 
-  <!-- ONBOARDING TAB -->
+  <!-- ONBOARDING -->
   <div id="tab-onboarding">
     <div class="progress-wrap">
       <div class="progress-fill" id="progFill" style="width:0%"></div>
@@ -380,74 +134,38 @@ label {
 
     <div class="card active" id="card1">
       <h3><span class="num">Étape 1</span> Création de l'Entité</h3>
-      <label>Nom de l'institution *</label>
-      <input type="text" id="entName" placeholder="Ex: Bank Of Africa">
-      <div class="row">
-        <div><label>Forme juridique *</label><input type="text" id="entLegal" placeholder="SA, SARL..."></div>
-        <div><label>N° Registre</label><input type="text" id="entReg" placeholder="RCS..."></div>
-      </div>
-      <div class="row">
-        <div><label>Pays *</label>
-          <select id="entCountry">
-            <option value="">Sélectionner...</option>
-            <option value="SN">Sénégal</option><option value="CI">Côte d'Ivoire</option><option value="ML">Mali</option>
-            <option value="BF">Burkina Faso</option><option value="BJ">Bénin</option><option value="TG">Togo</option>
-            <option value="NE">Niger</option><option value="LU">Luxembourg</option><option value="FR">France</option>
-          </select>
-        </div>
-        <div><label>Devise</label>
-          <select id="entCurrency"><option value="XOF">XOF - Franc CFA</option><option value="EUR">EUR - Euro</option><option value="USD">USD - Dollar</option></select>
-        </div>
-      </div>
-      <div class="row">
-        <div><label>Type *</label>
-          <select id="entType">
-            <option value="">Sélectionner...</option>
-            <option value="bank">Banque</option><option value="microfinance">Microfinance</option>
-            <option value="insurance">Assurance</option><option value="asset_management">Asset Management</option><option value="other">Autre</option>
-          </select>
-        </div>
-      </div>
+      <label>Nom de l'institution *</label><input type="text" id="entName" placeholder="Ex: Bank Of Africa">
+      <div class="row"><div><label>Forme juridique *</label><input type="text" id="entLegal" placeholder="SA, SARL..."></div><div><label>N° Registre</label><input type="text" id="entReg" placeholder="RCS..."></div></div>
+      <div class="row"><div><label>Pays *</label><select id="entCountry"><option value="">Sélectionner...</option><option value="SN">Sénégal</option><option value="CI">Côte d'Ivoire</option><option value="ML">Mali</option><option value="BF">Burkina Faso</option><option value="BJ">Bénin</option><option value="TG">Togo</option><option value="NE">Niger</option><option value="LU">Luxembourg</option><option value="FR">France</option></select></div><div><label>Devise</label><select id="entCurrency"><option value="XOF">XOF - Franc CFA</option><option value="EUR">EUR - Euro</option><option value="USD">USD - Dollar</option></select></div></div>
+      <div class="row"><div><label>Type *</label><select id="entType"><option value="">Sélectionner...</option><option value="bank">Banque</option><option value="microfinance">Microfinance</option><option value="insurance">Assurance</option><option value="asset_management">Asset Management</option><option value="other">Autre</option></select></div></div>
       <button class="btn btn-primary" onclick="createEntity()" id="btnCreate">✅ Créer l'entité et ancrer dans la blockchain</button>
       <div class="result" id="r1"></div>
     </div>
 
     <div class="card" id="card2">
       <h3><span class="num">Étape 2</span> Classification Réglementaire</h3>
-      <p style="font-size:10px;color:var(--muted);margin-bottom:8px">Classification officielle attribuée par le régulateur (BCEAO, CSSF, etc.)</p>
-      <div class="row">
-        <div><label>Cadre Bâle *</label>
-          <select id="clFramework"><option value="">Sélectionner...</option><option value="BASEL_II">Bâle II</option><option value="BASEL_III">Bâle III</option><option value="BASEL_IV">Bâle IV</option></select>
-        </div>
-        <div><label>Cadre CRR *</label>
-          <select id="clCRR"><option value="">Sélectionner...</option><option value="CRR1">CRR1</option><option value="CRR2">CRR2</option><option value="CRR3">CRR3</option></select>
-        </div>
-      </div>
-      <div class="row">
-        <div><label>Classification *</label>
-          <select id="clType"><option value="">Sélectionner...</option><option value="SNCI">SNCI - Small Institution</option><option value="LARGE">Large Institution</option></select>
-        </div>
-        <div><label>Réf. Régulateur</label><input type="text" id="clRef" placeholder="Ex: Décision BCEAO n°..."></div>
-      </div>
+      <p style="font-size:10px;color:var(--muted);margin-bottom:6px">Classification officielle attribuée par le régulateur (BCEAO, CSSF, etc.)</p>
+      <div class="row"><div><label>Cadre Bâle *</label><select id="clFramework"><option value="">Sélectionner...</option><option value="BASEL_II">Bâle II</option><option value="BASEL_III">Bâle III</option><option value="BASEL_IV">Bâle IV</option></select></div><div><label>Cadre CRR *</label><select id="clCRR"><option value="">Sélectionner...</option><option value="CRR1">CRR1</option><option value="CRR2">CRR2</option><option value="CRR3">CRR3</option></select></div></div>
+      <div class="row"><div><label>Classification *</label><select id="clType"><option value="">Sélectionner...</option><option value="SNCI">SNCI - Small Institution</option><option value="LARGE">Large Institution</option></select></div><div><label>Réf. Régulateur</label><input type="text" id="clRef" placeholder="Ex: Décision BCEAO n°..."></div></div>
       <div class="info-box info" id="clInfo" style="display:none"></div>
-      <button class="btn btn-primary" onclick="setClassification()" id="btnClass" style="margin-top:8px" disabled>🔒 Confirmer la classification</button>
+      <button class="btn btn-primary" onclick="setClassification()" id="btnClass" style="margin-top:6px" disabled>🔒 Confirmer la classification</button>
       <div class="result" id="r2"></div>
     </div>
 
     <div class="card" id="card3">
       <h3><span class="num">Étape 3</span> Activation Package Réglementaire</h3>
-      <p style="font-size:10px;color:var(--muted);margin-bottom:8px" id="pkgLabel">Sélectionnez la classification d'abord</p>
+      <p style="font-size:10px;color:var(--muted);margin-bottom:6px" id="pkgLabel">Sélectionnez la classification d'abord</p>
       <div id="pkgRules"></div>
       <div class="info-box ok" id="pkgInfo" style="display:none"></div>
-      <button class="btn btn-primary" onclick="activatePackage()" id="btnPkg" style="margin-top:8px" disabled>📦 Activer le package réglementaire</button>
+      <button class="btn btn-primary" onclick="activatePackage()" id="btnPkg" style="margin-top:6px" disabled>📦 Activer le package réglementaire</button>
       <div class="result" id="r3"></div>
     </div>
 
     <div class="card" id="card4">
       <h3><span class="num">Étape 4</span> Consentements RGPD</h3>
-      <p style="font-size:10px;color:var(--muted);margin-bottom:8px">Consentements obligatoires. <strong style="color:var(--warn)">Bloquants.</strong></p>
+      <p style="font-size:10px;color:var(--muted);margin-bottom:6px">Consentements obligatoires. <strong style="color:var(--warn)">Bloquants.</strong></p>
       <div id="consentList"></div>
-      <button class="btn btn-primary" onclick="validateGDPR()" id="btnGDPR" style="margin-top:10px" disabled>🔐 Valider les consentements (SHA-256)</button>
+      <button class="btn btn-primary" onclick="validateGDPR()" id="btnGDPR" style="margin-top:8px" disabled>🔐 Valider les consentements (SHA-256)</button>
       <div class="result" id="r4"></div>
     </div>
 
@@ -461,32 +179,38 @@ label {
     <div class="score" id="score"></div>
   </div>
 
-  <!-- ENTITIES TAB -->
+  <!-- ENTITIES -->
   <div id="tab-entities" style="display:none">
-    <h3 style="margin-bottom:10px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">🏢 Entités enregistrées</h3>
+    <h3 style="margin-bottom:8px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">🏢 Entités enregistrées</h3>
     <div id="entityList"><p class="empty-state"><span class="empty-icon">📭</span><br>Aucune entité créée</p></div>
   </div>
 
-  <!-- PREDICTIVE TAB -->
+  <!-- PREDICTIVE -->
   <div id="tab-predictive" style="display:none">
-    <h3 style="margin-bottom:10px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">📊 Monitoring Prédictif</h3>
-    <div id="predictiveContent"><p class="empty-state"><span class="empty-icon">📊</span><br>Sélectionnez une entité pour voir l'analyse prédictive</p></div>
+    <h3 style="margin-bottom:8px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">📊 Monitoring Prédictif</h3>
+    <div id="predictiveContent"><p class="empty-state"><span class="empty-icon">📊</span><br>Sélectionnez une entité dans l'onglet "Entités"</p></div>
   </div>
 
-  <!-- MONITORING TAB -->
+  <!-- MONITORING -->
   <div id="tab-monitoring" style="display:none">
-    <h3 style="margin-bottom:10px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">📈 Monitoring des Classifications</h3>
+    <h3 style="margin-bottom:8px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">📈 Monitoring des Classifications</h3>
     <div id="monitoringList"><p class="empty-state"><span class="empty-icon">📈</span><br>Aucune entité à monitorer</p></div>
   </div>
 </div>
 
 <script>
-// ==========================================
-// ILERA MIB - ENGINE COMPLET
-// ==========================================
-
-var DB = { entities: [], activeEntity: null, step: 0, consentsGranted: false, ratiosHistory: {} };
+var DB = { entities: [], activeEntity: null, step: 0, ratiosHistory: {} };
 var consentStates = {};
+var PACKAGES = {
+  'BASEL_II_CRR1_SNCI':{name:'Bâle II - CRR1 - SNCI',rules:[{code:'CET1-MIN-B2',name:'CET1 Minimum',threshold:4,severity:'critical'},{code:'TIER1-MIN-B2',name:'Tier 1 Minimum',threshold:4,severity:'critical'},{code:'TOTAL-MIN-B2',name:'Total Capital',threshold:8,severity:'critical'}],templates:['COREP_B2_LIGHT','LCR_B2','LEVERAGE_B2']},
+  'BASEL_II_CRR1_LARGE':{name:'Bâle II - CRR1 - Large',rules:[{code:'CET1-MIN-B2',name:'CET1 Minimum',threshold:4,severity:'critical'},{code:'TIER1-MIN-B2',name:'Tier 1',threshold:4,severity:'critical'},{code:'TOTAL-MIN-B2',name:'Total Capital',threshold:8,severity:'critical'},{code:'PILLAR2-B2',name:'Pillar 2',threshold:2,severity:'warning'}],templates:['COREP_B2_FULL','LCR_B2','LEVERAGE_B2']},
+  'BASEL_III_CRR2_SNCI':{name:'Bâle III - CRR2 - SNCI',rules:[{code:'CET1-MIN',name:'CET1 Minimum',threshold:4.5,severity:'critical'},{code:'LCR-MIN',name:'LCR Minimum',threshold:100,severity:'critical'},{code:'NSFR-MIN',name:'NSFR Minimum',threshold:100,severity:'warning'},{code:'LEV-MIN',name:'Levier Minimum',threshold:3,severity:'warning'}],templates:['COREP_LIGHT','LCR_SIMPLIFIED','NSFR_SIMPLIFIED','LEVERAGE_STANDARD']},
+  'BASEL_III_CRR2_LARGE':{name:'Bâle III - CRR2 - Large',rules:[{code:'CET1-MIN',name:'CET1 Minimum',threshold:4.5,severity:'critical'},{code:'PILLAR2',name:'Pillar 2',threshold:2.5,severity:'critical'},{code:'LCR-MIN',name:'LCR Minimum',threshold:100,severity:'critical'},{code:'NSFR-MIN',name:'NSFR Minimum',threshold:100,severity:'warning'},{code:'LEV-MIN',name:'Levier Minimum',threshold:3,severity:'warning'},{code:'TLAC-MIN',name:'TLAC Minimum',threshold:16,severity:'critical'}],templates:['COREP_FULL','LCR_DETAILED','NSFR_DETAILED','LEVERAGE_FULL','TLAC']},
+  'BASEL_III_CRR3_SNCI':{name:'Bâle III - CRR3 - SNCI',rules:[{code:'CET1-MIN',name:'CET1 Minimum',threshold:4.5,severity:'critical'},{code:'LCR-MIN',name:'LCR Minimum',threshold:100,severity:'critical'},{code:'NSFR-MIN',name:'NSFR Minimum',threshold:100,severity:'warning'},{code:'LEV-MIN',name:'Levier Minimum',threshold:3,severity:'warning'}],templates:['COREP_LIGHT','LCR_SIMPLIFIED','NSFR_SIMPLIFIED','LEVERAGE_STANDARD']},
+  'BASEL_III_CRR3_LARGE':{name:'Bâle III - CRR3 - Large',rules:[{code:'CET1-MIN',name:'CET1 Minimum',threshold:4.5,severity:'critical'},{code:'PILLAR2',name:'Pillar 2',threshold:2.5,severity:'critical'},{code:'LCR-MIN',name:'LCR Minimum',threshold:100,severity:'critical'},{code:'NSFR-MIN',name:'NSFR Minimum',threshold:100,severity:'warning'},{code:'LEV-MIN',name:'Levier Minimum',threshold:3,severity:'warning'},{code:'TLAC-MIN',name:'TLAC Minimum',threshold:16,severity:'critical'}],templates:['COREP_CRR3','LCR_DETAILED','NSFR_DETAILED','LEVERAGE_FULL','TLAC']},
+  'BASEL_IV_CRR3_SNCI':{name:'Bâle IV - CRR3 - SNCI',rules:[{code:'CET1-MIN',name:'CET1 Minimum',threshold:4.5,severity:'critical'},{code:'OUTPUT-FLOOR',name:'Output Floor',threshold:50,severity:'critical'},{code:'LCR-MIN',name:'LCR',threshold:100,severity:'critical'},{code:'NSFR-MIN',name:'NSFR',threshold:100,severity:'warning'},{code:'LEV-MIN',name:'Levier',threshold:3,severity:'warning'}],templates:['COREP_CRR3_LIGHT','LCR_SIMPLIFIED','NSFR_SIMPLIFIED','LEVERAGE_STANDARD','OUTPUT_FLOOR']},
+  'BASEL_IV_CRR3_LARGE':{name:'Bâle IV - CRR3 - Large',rules:[{code:'CET1-MIN',name:'CET1 Minimum',threshold:4.5,severity:'critical'},{code:'OUTPUT-FLOOR',name:'Output Floor',threshold:72.5,severity:'critical'},{code:'LCR-MIN',name:'LCR',threshold:100,severity:'critical'},{code:'NSFR-MIN',name:'NSFR',threshold:100,severity:'warning'},{code:'LEV-MIN',name:'Levier',threshold:3,severity:'warning'},{code:'TLAC-MIN',name:'TLAC',threshold:16,severity:'critical'},{code:'CVA-RISK',name:'CVA Risk',threshold:0,severity:'warning'}],templates:['COREP_CRR3','LCR_DETAILED','NSFR_DETAILED','LEVERAGE_FULL','OUTPUT_FLOOR','TLAC']}
+};
 
 function h(){var s=JSON.stringify({d:Date.now(),r:Math.random()});var h='';for(var i=0;i<64;i++){h+='0123456789abcdef'[Math.floor(Math.random()*16)]}return h;}
 function show(id,c,cls){var e=document.getElementById(id);e.innerHTML=c;e.className='result show'+(cls?' '+cls:'');}
@@ -500,19 +224,36 @@ function updateProgress(){
   document.getElementById('btnFinal').disabled=DB.step<4;
 }
 
-// PACKAGES
-var PACKAGES={
-  'BASEL_II_CRR1_SNCI':{name:'Bâle II - CRR1 - SNCI',rules:[{code:'CET1-MIN-B2',name:'CET1 Minimum',threshold:4,severity:'critical'},{code:'TIER1-MIN-B2',name:'Tier 1 Minimum',threshold:4,severity:'critical'},{code:'TOTAL-MIN-B2',name:'Total Capital',threshold:8,severity:'critical'}],templates:['COREP_B2_LIGHT','LCR_B2','LEVERAGE_B2']},
-  'BASEL_II_CRR1_LARGE':{name:'Bâle II - CRR1 - Large',rules:[{code:'CET1-MIN-B2',name:'CET1 Minimum',threshold:4,severity:'critical'},{code:'TIER1-MIN-B2',name:'Tier 1',threshold:4,severity:'critical'},{code:'TOTAL-MIN-B2',name:'Total Capital',threshold:8,severity:'critical'},{code:'PILLAR2-B2',name:'Pillar 2',threshold:2,severity:'warning'}],templates:['COREP_B2_FULL','LCR_B2','LEVERAGE_B2']},
-  'BASEL_III_CRR2_SNCI':{name:'Bâle III - CRR2 - SNCI',rules:[{code:'CET1-MIN',name:'CET1 Minimum',threshold:4.5,severity:'critical'},{code:'LCR-MIN',name:'LCR Minimum',threshold:100,severity:'critical'},{code:'NSFR-MIN',name:'NSFR Minimum',threshold:100,severity:'warning'},{code:'LEV-MIN',name:'Levier Minimum',threshold:3,severity:'warning'}],templates:['COREP_LIGHT','LCR_SIMPLIFIED','NSFR_SIMPLIFIED','LEVERAGE_STANDARD']},
-  'BASEL_III_CRR2_LARGE':{name:'Bâle III - CRR2 - Large',rules:[{code:'CET1-MIN',name:'CET1 Minimum',threshold:4.5,severity:'critical'},{code:'PILLAR2',name:'Pillar 2',threshold:2.5,severity:'critical'},{code:'LCR-MIN',name:'LCR Minimum',threshold:100,severity:'critical'},{code:'NSFR-MIN',name:'NSFR Minimum',threshold:100,severity:'warning'},{code:'LEV-MIN',name:'Levier Minimum',threshold:3,severity:'warning'},{code:'TLAC-MIN',name:'TLAC Minimum',threshold:16,severity:'critical'}],templates:['COREP_FULL','LCR_DETAILED','NSFR_DETAILED','LEVERAGE_FULL','TLAC']},
-  'BASEL_III_CRR3_SNCI':{name:'Bâle III - CRR3 - SNCI',rules:[{code:'CET1-MIN',name:'CET1 Minimum',threshold:4.5,severity:'critical'},{code:'LCR-MIN',name:'LCR Minimum',threshold:100,severity:'critical'},{code:'NSFR-MIN',name:'NSFR Minimum',threshold:100,severity:'warning'},{code:'LEV-MIN',name:'Levier Minimum',threshold:3,severity:'warning'}],templates:['COREP_LIGHT','LCR_SIMPLIFIED','NSFR_SIMPLIFIED','LEVERAGE_STANDARD']},
-  'BASEL_III_CRR3_LARGE':{name:'Bâle III - CRR3 - Large',rules:[{code:'CET1-MIN',name:'CET1 Minimum',threshold:4.5,severity:'critical'},{code:'PILLAR2',name:'Pillar 2',threshold:2.5,severity:'critical'},{code:'LCR-MIN',name:'LCR Minimum',threshold:100,severity:'critical'},{code:'NSFR-MIN',name:'NSFR Minimum',threshold:100,severity:'warning'},{code:'LEV-MIN',name:'Levier Minimum',threshold:3,severity:'warning'},{code:'TLAC-MIN',name:'TLAC Minimum',threshold:16,severity:'critical'}],templates:['COREP_CRR3','LCR_DETAILED','NSFR_DETAILED','LEVERAGE_FULL','TLAC']},
-  'BASEL_IV_CRR3_SNCI':{name:'Bâle IV - CRR3 - SNCI',rules:[{code:'CET1-MIN',name:'CET1 Minimum',threshold:4.5,severity:'critical'},{code:'OUTPUT-FLOOR',name:'Output Floor',threshold:50,severity:'critical'},{code:'LCR-MIN',name:'LCR',threshold:100,severity:'critical'},{code:'NSFR-MIN',name:'NSFR',threshold:100,severity:'warning'},{code:'LEV-MIN',name:'Levier',threshold:3,severity:'warning'}],templates:['COREP_CRR3_LIGHT','LCR_SIMPLIFIED','NSFR_SIMPLIFIED','LEVERAGE_STANDARD','OUTPUT_FLOOR']},
-  'BASEL_IV_CRR3_LARGE':{name:'Bâle IV - CRR3 - Large',rules:[{code:'CET1-MIN',name:'CET1 Minimum',threshold:4.5,severity:'critical'},{code:'OUTPUT-FLOOR',name:'Output Floor',threshold:72.5,severity:'critical'},{code:'LCR-MIN',name:'LCR',threshold:100,severity:'critical'},{code:'NSFR-MIN',name:'NSFR',threshold:100,severity:'warning'},{code:'LEV-MIN',name:'Levier',threshold:3,severity:'warning'},{code:'TLAC-MIN',name:'TLAC',threshold:16,severity:'critical'},{code:'CVA-RISK',name:'CVA Risk',threshold:0,severity:'warning'}],templates:['COREP_CRR3','LCR_DETAILED','NSFR_DETAILED','LEVERAGE_FULL','OUTPUT_FLOOR','TLAC']}
-};
+function newEntity() {
+  DB.activeEntity = null;
+  DB.step = 0;
+  updateProgress();
+  document.getElementById('card1').classList.add('active');
+  document.getElementById('card2').classList.remove('active');
+  document.getElementById('card3').classList.remove('active');
+  document.getElementById('card4').classList.remove('active');
+  document.getElementById('card5').classList.remove('active');
+  document.getElementById('btnCreate').disabled = false;
+  ['entName','entLegal','entReg','entCountry','entCurrency','entType','clFramework','clCRR','clType','clRef'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el.tagName === 'SELECT') el.value = '';
+    else el.value = '';
+  });
+  document.getElementById('entCurrency').value = 'XOF';
+  document.getElementById('clInfo').style.display = 'none';
+  document.getElementById('pkgRules').innerHTML = '';
+  document.getElementById('pkgInfo').style.display = 'none';
+  document.getElementById('summary').innerHTML = '';
+  document.getElementById('score').className = 'score';
+  document.getElementById('score').innerHTML = '';
+  ['r1','r2','r3','r4','r5'].forEach(function(id){
+    document.getElementById(id).className = 'result';
+    document.getElementById(id).innerHTML = '';
+  });
+  generateConsents();
+  switchTab('onboarding');
+}
 
-// ========== ENTITY CREATION ==========
 function createEntity(){
   var n=document.getElementById('entName').value.trim();
   var l=document.getElementById('entLegal').value.trim();
@@ -528,7 +269,6 @@ function createEntity(){
   updateAllTabs();
 }
 
-// ========== CLASSIFICATION ==========
 function setClassification(){
   var f=document.getElementById('clFramework').value;
   var cr=document.getElementById('clCRR').value;
@@ -539,10 +279,9 @@ function setClassification(){
   document.getElementById('card2').classList.remove('active');document.getElementById('card3').classList.add('active');
   var pk=f+'_'+cr+'_'+ct;DB.activeEntity.packageKey=pk;
   document.getElementById('pkgLabel').innerHTML='Package à activer : <strong>'+pk+'</strong>';
-  var pkg=PACKAGES[pk];
-  if(!pkg){pkg={rules:[],templates:[]};}
+  var pkg=PACKAGES[pk]||{rules:[],templates:[]};
   DB.activeEntity.pendingRules=pkg.rules;DB.activeEntity.pendingTemplates=pkg.templates;
-  var rh='';pkg.rules.forEach(function(r){rh+='<div style="padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03);font-size:10px"><b>'+r.code+'</b> : '+r.name+' ≥ '+r.threshold+'% <span style="color:'+(r.severity==='critical'?'#f87171':'#f59e0b')+'">['+r.severity+']</span></div>';});
+  var rh='';pkg.rules.forEach(function(r){rh+='<div style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03);font-size:10px"><b>'+r.code+'</b> : '+r.name+' ≥ '+r.threshold+'% <span style="color:'+(r.severity==='critical'?'#f87171':'#f59e0b')+'">['+r.severity+']</span></div>';});
   document.getElementById('pkgRules').innerHTML=rh;
   var info='Classification : <b>'+f.replace('_',' ')+' - '+cr+' - '+(ct==='SNCI'?'Small':'Large')+'</b><br>'+pkg.rules.length+' règles • '+pkg.templates.length+' templates';
   document.getElementById('clInfo').style.display='block';document.getElementById('clInfo').innerHTML=info;
@@ -550,7 +289,6 @@ function setClassification(){
   updateAllTabs();
 }
 
-// ========== PACKAGE ACTIVATION ==========
 function activatePackage(){
   if(!DB.activeEntity||!DB.activeEntity.pendingRules)return;
   DB.activeEntity.rules=DB.activeEntity.pendingRules;DB.activeEntity.templates=DB.activeEntity.pendingTemplates;
@@ -562,7 +300,6 @@ function activatePackage(){
   show('r3','<span style="color:#4ade80">✅ Package activé</span><br><b>'+DB.activeEntity.rules.length+' règles</b><br><b>'+DB.activeEntity.templates.length+' templates</b><br><b>Hash :</b> <span class="hash">'+DB.activeEntity.packageHash.substring(0,24)+'...</span>');
 }
 
-// ========== CONSENTS ==========
 function generateConsents(){
   var cons=[{id:'data_processing',label:'Traitement des données financières',desc:'Calcul des ratios réglementaires',req:true},{id:'data_storage',label:'Stockage sécurisé',desc:'Infrastructure ILERA (AES-256-GCM)',req:true},{id:'data_sharing',label:'Partage avec le régulateur',desc:'BCEAO, CSSF, Commission Bancaire',req:true},{id:'reporting',label:'Production des rapports',desc:'COREP, LCR, NSFR, Leverage',req:true}];
   consentStates={};
@@ -607,7 +344,6 @@ function finalValidation(){
   updateAllTabs();
 }
 
-// ========== TABS ==========
 function switchTab(tab){
   document.getElementById('tab-onboarding').style.display=tab==='onboarding'?'block':'none';
   document.getElementById('tab-entities').style.display=tab==='entities'?'block':'none';
@@ -623,11 +359,7 @@ function switchTab(tab){
   if(tab==='monitoring')updateMonitoringTab();
 }
 
-function updateAllTabs(){
-  updateEntitiesTab();
-  updatePredictiveTab();
-  updateMonitoringTab();
-}
+function updateAllTabs(){updateEntitiesTab();updatePredictiveTab();updateMonitoringTab();}
 
 function updateEntitiesTab(){
   var count=DB.entities.length;
@@ -649,7 +381,6 @@ function selectEntity(id){
   switchTab('predictive');
 }
 
-// ========== PREDICTIVE ANALYSIS ==========
 function analyzeTrends(entity){
   var history=DB.ratiosHistory[entity.id]||[];
   if(history.length<2)return null;
@@ -686,44 +417,32 @@ function assessRisk(entity){
   var triggers=[],details=[],prob=0;
   if(latest.totalBilan){var r=latest.totalBilan/5000000000;if(r>=1){triggers.push('Total Bilan');prob=Math.max(prob,95);details.push('Bilan : '+(latest.totalBilan/1e9).toFixed(1)+' Mrd (seuil : 5 Mrd) — DÉPASSÉ');}else if(r>=0.85){triggers.push('Bilan approche');prob=Math.max(prob,75);details.push('Bilan : '+(latest.totalBilan/1e9).toFixed(1)+' Mrd ('+(r*100).toFixed(0)+'% du seuil)');}}
   if(latest.rwa){var rr=latest.rwa/1500000000;if(rr>=1){triggers.push('RWA');prob=Math.max(prob,95);details.push('RWA : '+(latest.rwa/1e9).toFixed(1)+' Mrd (seuil : 1,5 Mrd) — DÉPASSÉ');}else if(rr>=0.85){triggers.push('RWA approche');prob=Math.max(prob,75);details.push('RWA : '+(latest.rwa/1e9).toFixed(1)+' Mrd');}}
-  var trends=analyzeTrends(entity);
-  if(trends){
-    if(trends.cet1&&trends.cet1.projection12m&&trends.cet1.projection12m<=5){triggers.push('Projection CET1');prob=Math.max(prob,80);details.push('CET1 projeté 12 mois : '+trends.cet1.projection12m.toFixed(1)+'% (seuil critique : 5%)');}
-    if(trends.lcr&&trends.lcr.projection12m&&trends.lcr.projection12m<=105){triggers.push('Projection LCR');prob=Math.max(prob,75);details.push('LCR projeté 12 mois : '+trends.lcr.projection12m.toFixed(0)+'%');}
-  }
   var riskLevel='none';if(prob>=90)riskLevel='imminent';else if(prob>=70)riskLevel='high';else if(prob>=40)riskLevel='medium';else if(prob>0)riskLevel='low';
   var timelines={imminent:'Changement probable sous 3 mois',high:'Changement probable sous 6-12 mois',medium:'Surveillance renforcée',low:'Aucun changement à court terme',none:'Stable'};
-  var recs={imminent:'🚨 URGENT : Préparer le dossier de transition SNCI→Large. Anticiper les nouveaux seuils.',high:'⚠️ ACTION : Initier la préparation à la transition.',medium:'📊 SURVEILLANCE : Suivre l\'évolution trimestrielle.',low:'✅ STABLE : Poursuivre le monitoring standard.',none:'✅ STABLE : Situation conforme.'};
+  var recs={imminent:'🚨 URGENT : Préparer le dossier de transition SNCI→Large.',high:'⚠️ ACTION : Initier la préparation à la transition.',medium:'📊 SURVEILLANCE : Suivre l\'évolution trimestrielle.',low:'✅ STABLE : Poursuivre le monitoring standard.',none:'✅ STABLE : Situation conforme.'};
   return{riskLevel:riskLevel,probability:prob,triggers:triggers,details:details,timeline:timelines[riskLevel],recommendation:recs[riskLevel]};
 }
 
 function generateActions(riskLevel,trends,entity){
   var actions=[];
   if(riskLevel==='imminent'||riskLevel==='high'){
-    actions.push({id:'sim',priority:'immediate',icon:'📊',label:'Simuler la transition SNCI → Large',desc:'Visualiser l\'impact du passage en Large Institution sur tous les ratios. Nouveaux seuils : CET1 6%, LCR 110%, NSFR 110%.',link:'/simulations'});
-    actions.push({id:'report',priority:'immediate',icon:'📄',label:'Générer le rapport de transition',desc:'Dossier complet avec comparaison des seuils, impact financier, et documents pré-remplis pour le régulateur.',link:'/reports'});
-    actions.push({id:'meeting',priority:'immediate',icon:'📅',label:'Planifier une réunion d\'urgence',desc:'Le client doit être informé. Télécharger l\'executive summary automatique.',link:'/entities'});
+    actions.push({id:'sim',priority:'immediate',icon:'📊',label:'Simuler la transition SNCI → Large',desc:'Visualiser l\'impact du passage en Large Institution. Nouveaux seuils : CET1 6%, LCR 110%, NSFR 110%.',link:'/simulations'});
+    actions.push({id:'report',priority:'immediate',icon:'📄',label:'Générer le rapport de transition',desc:'Dossier complet : comparaison des seuils, impact financier, documents pré-remplis pour le régulateur.',link:'/reports'});
+    actions.push({id:'meeting',priority:'immediate',icon:'📅',label:'Planifier une réunion d\'urgence',desc:'Informer le client. Télécharger l\'executive summary automatique.',link:'/entities'});
   }
   if(riskLevel==='medium'){
     actions.push({id:'alert',priority:'short_term',icon:'🔔',label:'Activer l\'alerte trimestrielle renforcée',desc:'Notification automatique si la tendance s\'accélère.',link:'/monitoring'});
-    actions.push({id:'prep',priority:'medium_term',icon:'📋',label:'Préparer un scénario préventif',desc:'Plan d\'action optionnel avec optimisation des fonds propres.',link:'/simulations'});
+    actions.push({id:'prep',priority:'medium_term',icon:'📋',label:'Préparer un scénario préventif',desc:'Plan d\'action avec optimisation des fonds propres.',link:'/simulations'});
   }
-  if(trends&&trends.cet1&&trends.cet1.alert==='critical'){
-    actions.push({id:'cet1',priority:'immediate',icon:'🎯',label:'Optimiser le ratio CET1 ('+trends.cet1.current.toFixed(1)+'%)',desc:'Simuler une augmentation de capital ou une réduction des RWA.',link:'/simulations'});
-  }
-  if(trends&&trends.lcr&&(trends.lcr.alert==='critical'||trends.lcr.alert==='warning')){
-    actions.push({id:'lcr',priority:'short_term',icon:'💧',label:'Renforcer le ratio LCR',desc:'Simuler une augmentation des HQLA.',link:'/simulations'});
-  }
+  if(trends&&trends.cet1&&trends.cet1.alert==='critical'){actions.push({id:'cet1',priority:'immediate',icon:'🎯',label:'Optimiser le ratio CET1 ('+trends.cet1.current.toFixed(1)+'%)',desc:'Simuler une augmentation de capital ou une réduction des RWA.',link:'/simulations'});}
+  if(trends&&trends.lcr&&(trends.lcr.alert==='critical'||trends.lcr.alert==='warning')){actions.push({id:'lcr',priority:'short_term',icon:'💧',label:'Renforcer le ratio LCR',desc:'Simuler une augmentation des HQLA.',link:'/simulations'});}
   actions.push({id:'comp',priority:'medium_term',icon:'📊',label:'Rapport de conformité périodique',desc:'Rapport trimestriel avec tous les ratios et projections.',link:'/reports'});
   actions.push({id:'bench',priority:'medium_term',icon:'📈',label:'Comparer au benchmark sectoriel',desc:'Positionner cette entité par rapport aux autres institutions.',link:'/dashboard'});
   return actions;
 }
 
 function updatePredictiveTab(){
-  if(!DB.activeEntity){
-    document.getElementById('predictiveContent').innerHTML='<p class="empty-state"><span class="empty-icon">📊</span><br>Sélectionnez une entité dans l\'onglet "Entités"</p>';
-    return;
-  }
+  if(!DB.activeEntity){document.getElementById('predictiveContent').innerHTML='<p class="empty-state"><span class="empty-icon">📊</span><br>Sélectionnez une entité dans l\'onglet "Entités"</p>';return;}
   var entity=DB.activeEntity;
   var history=DB.ratiosHistory[entity.id]||[];
   var trends=analyzeTrends(entity);
@@ -731,54 +450,37 @@ function updatePredictiveTab(){
   var actions=generateActions(risk.riskLevel,trends,entity);
   var riskColors={imminent:'risk-imminent',high:'risk-high',medium:'risk-medium',low:'risk-low',none:'risk-none'};
   var riskLabels={imminent:'Imminent',high:'Élevé',medium:'Moyen',low:'Faible',none:'Aucun'};
-
   var html='';
-
-  // Entity name
-  html+='<div style="margin-bottom:12px;font-size:13px;font-weight:600;color:#fff">'+entity.name+'</div>';
-
-  // Risk card
+  html+='<div style="margin-bottom:10px;font-size:13px;font-weight:600;color:#fff">'+entity.name+'</div>';
   html+='<div class="card" style="border-color:'+(risk.riskLevel==='imminent'?'rgba(248,113,113,0.2)':risk.riskLevel==='high'?'rgba(245,158,11,0.2)':'rgba(255,255,255,0.06)')+'">';
-  html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:11px;font-weight:600">Risque de Reclassification</span><span class="risk-badge '+riskColors[risk.riskLevel]+'">'+riskLabels[risk.riskLevel]+' — '+risk.probability+'%</span></div>';
+  html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:11px;font-weight:600">Risque de Reclassification</span><span class="risk-badge '+riskColors[risk.riskLevel]+'">'+riskLabels[risk.riskLevel]+' — '+risk.probability+'%</span></div>';
   html+='<p style="font-size:10px;color:rgba(255,255,255,0.6)">'+risk.recommendation+'</p>';
-  html+='<p style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:4px">'+risk.timeline+'</p>';
-  if(risk.details.length>0){html+='<div style="margin-top:6px">';risk.details.forEach(function(d){html+='<div style="font-size:9px;color:rgba(255,255,255,0.4)">• '+d+'</div>';});html+='</div>';}
+  html+='<p style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:3px">'+risk.timeline+'</p>';
+  if(risk.details.length>0){html+='<div style="margin-top:4px">';risk.details.forEach(function(d){html+='<div style="font-size:9px;color:rgba(255,255,255,0.4)">• '+d+'</div>';});html+='</div>';}
   html+='</div>';
-
-  // Trends
   if(trends&&Object.keys(trends).length>0){
     html+='<div class="section-title">Tendances des Ratios</div>';
     html+='<div class="trend-grid">';
     ['cet1','lcr','nsfr','leverage'].forEach(function(k){
-      var t=trends[k];
-      if(!t)return;
+      var t=trends[k];if(!t)return;
       html+='<div class="trend-card" style="border-color:'+(t.alert==='critical'?'rgba(248,113,113,0.2)':t.alert==='warning'?'rgba(245,158,11,0.2)':'rgba(255,255,255,0.06)')+'">';
       html+='<div class="trend-name">'+k.toUpperCase()+'</div>';
       html+='<div class="trend-value" style="color:'+(t.alert==='critical'?'#f87171':t.alert==='warning'?'#f59e0b':'#4ade80')+'">'+t.current.toFixed(1)+'%</div>';
       html+='<div class="trend-sub">'+(t.direction==='up'?'↗':t.direction==='down'?'↘':'→')+' '+t.percentChange+'%';
       if(t.projection6m)html+=' → '+t.projection6m.toFixed(1)+'% (6m)';
-      html+='</div>';
-      html+='<div style="font-size:8px;color:rgba(255,255,255,0.3);margin-top:3px">'+t.message+'</div>';
-      html+='</div>';
+      html+='</div><div style="font-size:8px;color:rgba(255,255,255,0.3);margin-top:2px">'+t.message+'</div></div>';
     });
     html+='</div>';
   }
-
-  // Actions
   if(actions.length>0){
     html+='<div class="section-title">Actions Recommandées</div>';
     actions.forEach(function(a){
       html+='<div class="action-card '+a.priority+'">';
       html+='<div style="display:flex;align-items:center;gap:6px"><span style="font-size:14px">'+a.icon+'</span><span class="act-label">'+a.label+'</span>'+(a.priority==='immediate'?'<span style="font-size:8px;background:rgba(248,113,113,0.1);color:#f87171;padding:2px 6px;border-radius:10px">URGENT</span>':'')+'</div>';
-      html+='<div class="act-desc">'+a.desc+'</div>';
-      html+='<a class="act-link" href="'+a.link+'" style="pointer-events:none">Ouvrir '+a.link+'</a>';
-      html+='</div>';
+      html+='<div class="act-desc">'+a.desc+'</div><span class="act-link">'+a.link+'</span></div>';
     });
   }
-
-  // Demo data button
-  html+='<button class="btn btn-primary" style="margin-top:10px;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15)" onclick="loadDemoData()">📥 Charger des données de démonstration</button>';
-
+  html+='<button class="btn btn-primary" style="margin-top:8px;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15)" onclick="loadDemoData()">📥 Charger des données de démonstration</button>';
   document.getElementById('predictiveContent').innerHTML=html;
 }
 
@@ -797,8 +499,7 @@ function loadDemoData(){
       overallStatus:i<3?'compliant':'warning'
     });
   });
-  updatePredictiveTab();
-  updateMonitoringTab();
+  updatePredictiveTab();updateMonitoringTab();
 }
 
 function updateMonitoringTab(){
@@ -809,17 +510,13 @@ function updateMonitoringTab(){
     html+='<div style="font-size:12px;font-weight:600;color:#fff">'+e.name+'</div>';
     html+='<div style="font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px">Classification : '+e.baseFramework.replace('_',' ')+' - '+e.crrFramework+' - '+(e.classification==='SNCI'?'SNCI':'Large')+'</div>';
     html+='<div style="font-size:9px;color:#4ade80;margin-top:4px">Surveillance : Active ✅</div>';
-    if(e.classification==='SNCI'){
-      html+='<div style="font-size:9px;color:#f59e0b;margin-top:4px">⚠️ Seuils SNCI→Large surveillés : Bilan 5 Mrd • RWA 1,5 Mrd</div>';
-    }else{
-      html+='<div style="font-size:9px;color:#60a5fa;margin-top:4px">Institution Large : reporting complet activé</div>';
-    }
+    if(e.classification==='SNCI'){html+='<div style="font-size:9px;color:#f59e0b;margin-top:4px">⚠️ Seuils SNCI→Large surveillés : Bilan 5 Mrd • RWA 1,5 Mrd</div>';}
+    else{html+='<div style="font-size:9px;color:#60a5fa;margin-top:4px">Institution Large : reporting complet activé</div>';}
     html+='</div>';
   });
   document.getElementById('monitoringList').innerHTML=html||'<p class="empty-state"><span class="empty-icon">📈</span><br>Aucune entité à monitorer</p>';
 }
 
-// Init
 updateProgress();
 generateConsents();
 </script>
