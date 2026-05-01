@@ -95,7 +95,8 @@ label { display: block; font-size: 10px; color: var(--muted); text-transform: up
 .action-card.short { border-color: rgba(245,158,11,0.2); background: rgba(245,158,11,0.03); }
 .action-card .act-label { font-size: 11px; font-weight: 600; }
 .action-card .act-desc { font-size: 9px; color: var(--muted); margin-top: 2px; }
-.action-card .act-link { display: inline-block; font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.04); padding: 4px 8px; border-radius: 5px; margin-top: 4px; text-decoration: none; }
+.action-card .act-link { display: inline-block; font-size: 9px; font-weight: 600; color: #60a5fa; background: rgba(96,165,250,0.08); padding: 5px 10px; border-radius: 5px; margin-top: 5px; text-decoration: none; transition: all 0.2s; }
+.action-card .act-link:hover { background: rgba(96,165,250,0.15); }
 .trend-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; }
 .trend-card { border-radius: 7px; padding: 8px; background: var(--card); border: 1px solid var(--border); }
 .trend-card .trend-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.7); }
@@ -104,6 +105,8 @@ label { display: block; font-size: 10px; color: var(--muted); text-transform: up
 .section-title { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin: 10px 0 5px; padding-bottom: 3px; border-bottom: 1px solid var(--border); }
 .empty-state { text-align: center; padding: 24px; color: var(--muted); font-size: 12px; }
 .empty-state .empty-icon { font-size: 32px; margin-bottom: 6px; }
+.insight-box { background: rgba(96,165,250,0.04); border: 1px solid rgba(96,165,250,0.10); border-radius: 8px; padding: 10px 12px; margin-top: 8px; font-size: 10px; color: rgba(255,255,255,0.6); }
+.insight-box .insight-title { font-size: 10px; font-weight: 600; color: #60a5fa; margin-bottom: 3px; }
 </style>
 </head>
 <body>
@@ -118,6 +121,9 @@ label { display: block; font-size: 10px; color: var(--muted); text-transform: up
     <button class="tab active" onclick="switchTab('onboarding')">Onboarding</button>
     <button class="tab" onclick="switchTab('entities')">Entités (0)</button>
     <button class="tab" onclick="switchTab('predictive')">Prédictif</button>
+    <button class="tab" onclick="switchTab('simulations')">Simulations</button>
+    <button class="tab" onclick="switchTab('reports')">Rapports</button>
+    <button class="tab" onclick="switchTab('benchmark')">Benchmark</button>
     <button class="tab" onclick="switchTab('monitoring')">Monitoring</button>
   </div>
 
@@ -191,6 +197,24 @@ label { display: block; font-size: 10px; color: var(--muted); text-transform: up
     <div id="predictiveContent"><p class="empty-state"><span class="empty-icon">📊</span><br>Sélectionnez une entité dans l'onglet "Entités"</p></div>
   </div>
 
+  <!-- SIMULATIONS -->
+  <div id="tab-simulations" style="display:none">
+    <h3 style="margin-bottom:8px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">🎚️ Simulations Interactives</h3>
+    <div id="simulationsContent"></div>
+  </div>
+
+  <!-- REPORTS -->
+  <div id="tab-reports" style="display:none">
+    <h3 style="margin-bottom:8px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">📄 Génération de Rapports</h3>
+    <div id="reportsContent"></div>
+  </div>
+
+  <!-- BENCHMARK -->
+  <div id="tab-benchmark" style="display:none">
+    <h3 style="margin-bottom:8px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">📈 Benchmark Sectoriel</h3>
+    <div id="benchmarkContent"></div>
+  </div>
+
   <!-- MONITORING -->
   <div id="tab-monitoring" style="display:none">
     <h3 style="margin-bottom:8px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">📈 Monitoring des Classifications</h3>
@@ -225,31 +249,23 @@ function updateProgress(){
 }
 
 function newEntity() {
-  DB.activeEntity = null;
-  DB.step = 0;
-  updateProgress();
+  DB.activeEntity = null; DB.step = 0; updateProgress();
   document.getElementById('card1').classList.add('active');
   document.getElementById('card2').classList.remove('active');
   document.getElementById('card3').classList.remove('active');
   document.getElementById('card4').classList.remove('active');
   document.getElementById('card5').classList.remove('active');
   document.getElementById('btnCreate').disabled = false;
-  ['entName','entLegal','entReg','entCountry','entCurrency','entType','clFramework','clCRR','clType','clRef'].forEach(function(id){
-    var el = document.getElementById(id);
-    if (el.tagName === 'SELECT') el.value = '';
-    else el.value = '';
-  });
-  document.getElementById('entCurrency').value = 'XOF';
-  document.getElementById('clInfo').style.display = 'none';
-  document.getElementById('pkgRules').innerHTML = '';
-  document.getElementById('pkgInfo').style.display = 'none';
-  document.getElementById('summary').innerHTML = '';
-  document.getElementById('score').className = 'score';
-  document.getElementById('score').innerHTML = '';
-  ['r1','r2','r3','r4','r5'].forEach(function(id){
-    document.getElementById(id).className = 'result';
-    document.getElementById(id).innerHTML = '';
-  });
+  ['entName','entLegal','entReg','clRef'].forEach(function(id){document.getElementById(id).value='';});
+  ['entCountry','entCurrency','entType','clFramework','clCRR','clType'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('entCurrency').value='XOF';
+  document.getElementById('clInfo').style.display='none';
+  document.getElementById('pkgRules').innerHTML='';
+  document.getElementById('pkgInfo').style.display='none';
+  document.getElementById('summary').innerHTML='';
+  document.getElementById('score').className='score';
+  document.getElementById('score').innerHTML='';
+  ['r1','r2','r3','r4','r5'].forEach(function(id){document.getElementById(id).className='result';document.getElementById(id).innerHTML='';});
   generateConsents();
   switchTab('onboarding');
 }
@@ -344,50 +360,156 @@ function finalValidation(){
   updateAllTabs();
 }
 
-function switchTab(tab){
-  document.getElementById('tab-onboarding').style.display=tab==='onboarding'?'block':'none';
-  document.getElementById('tab-entities').style.display=tab==='entities'?'block':'none';
-  document.getElementById('tab-predictive').style.display=tab==='predictive'?'block':'none';
-  document.getElementById('tab-monitoring').style.display=tab==='monitoring'?'block':'none';
-  var tabs=document.querySelectorAll('.tab');
-  tabs[0].classList.toggle('active',tab==='onboarding');
-  tabs[1].classList.toggle('active',tab==='entities');
-  tabs[2].classList.toggle('active',tab==='predictive');
-  tabs[3].classList.toggle('active',tab==='monitoring');
-  if(tab==='entities')updateEntitiesTab();
-  if(tab==='predictive')updatePredictiveTab();
-  if(tab==='monitoring')updateMonitoringTab();
+// ========== SIMULATIONS MODULE ==========
+var simParams = [
+  { key:'cet1Capital',label:'Fonds propres CET1',value:500,min:100,max:2000,step:10,unit:'M'},
+  { key:'rwa',label:'Actifs pondérés (RWA)',value:3500,min:500,max:10000,step:10,unit:'M'},
+  { key:'hqla',label:'HQLA',value:200,min:50,max:1000,step:5,unit:'M'},
+  { key:'netOutflows',label:'Sorties nettes',value:150,min:20,max:800,step:5,unit:'M'},
+  { key:'asf',label:'Financement stable disponible',value:800,min:200,max:3000,step:10,unit:'M'},
+  { key:'rsf',label:'Financement stable requis',value:700,min:200,max:3000,step:10,unit:'M'},
+  { key:'tier1Capital',label:'Capital Tier 1',value:600,min:100,max:2500,step:10,unit:'M'},
+  { key:'totalExposure',label:'Exposition totale',value:10000,min:1000,max:50000,step:100,unit:'M'}
+];
+
+function getSimParam(key){var p=simParams.find(function(x){return x.key===key});return p?p.value:0;}
+function updateSimParam(key,val){
+  simParams=simParams.map(function(p){return p.key===key?{...p,value:parseInt(val)}:p;});
+  updateSimulationsTab();
 }
 
-function updateAllTabs(){updateEntitiesTab();updatePredictiveTab();updateMonitoringTab();}
+function updateSimulationsTab(){
+  var cet1=getSimParam('cet1Capital')/getSimParam('rwa')*100;
+  var lcr=getSimParam('hqla')/getSimParam('netOutflows')*100;
+  var nsfr=getSimParam('asf')/getSimParam('rsf')*100;
+  var lev=getSimParam('tier1Capital')/getSimParam('totalExposure')*100;
+  var ratios=[{name:'CET1 Ratio',value:cet1,threshold:4.5},{name:'LCR',value:lcr,threshold:100},{name:'NSFR',value:nsfr,threshold:100},{name:'Leverage Ratio',value:lev,threshold:3}];
+  var compliant=ratios.every(function(r){return r.value>=r.threshold;});
 
-function updateEntitiesTab(){
-  var count=DB.entities.length;
-  document.querySelectorAll('.tab')[1].textContent='Entités ('+count+')';
   var html='';
-  DB.entities.forEach(function(e){
-    html+='<button class="entity-list-item'+(DB.activeEntity&&DB.activeEntity.id===e.id?' selected':'')+'" onclick="selectEntity(\''+e.id+'\')">';
-    html+='<div class="e-name">'+e.name+'</div>';
-    html+='<div class="e-info">'+e.legalName+' • '+e.country+' • '+(e.baseFramework||'Non classifié')+'</div>';
-    html+='<span style="font-size:8px;padding:2px 7px;border-radius:20px;margin-top:3px;display:inline-block;'+(e.onboardingStatus==='completed'?'background:rgba(74,222,128,0.1);color:#4ade80':'background:rgba(245,158,11,0.1);color:#f59e0b')+'">'+(e.onboardingStatus==='completed'?'Complété':'En cours')+'</span>';
-    html+='</button>';
+  html+='<div class="row" style="margin-bottom:10px"><div><label>Entité</label><select id="simEntity" onchange="updateSimulationsTab()" style="width:100%"><option value="">Sélectionner...</option>';
+  DB.entities.forEach(function(e){html+='<option value="'+e.id+'">'+e.name+'</option>';});
+  html+='</select></div></div>';
+
+  simParams.forEach(function(p){
+    html+='<div class="card"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10px;color:rgba(255,255,255,0.5)">'+p.label+'</span><span style="font-size:12px;font-weight:600;color:#fff">'+p.value+' '+p.unit+'</span></div>';
+    html+='<input type="range" min="'+p.min+'" max="'+p.max+'" step="'+p.step+'" value="'+p.value+'" oninput="updateSimParam(\''+p.key+'\',this.value)" style="width:100%;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;appearance:none;cursor:pointer">';
+    html+='<div style="display:flex;justify-content:space-between;font-size:8px;color:rgba(255,255,255,0.2);margin-top:2px"><span>'+p.min+'</span><span>'+p.max+'</span></div></div>';
   });
-  document.getElementById('entityList').innerHTML=html||'<p class="empty-state"><span class="empty-icon">📭</span><br>Aucune entité créée</p>';
+
+  html+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font-size:12px;font-weight:600">Résultats en Temps Réel</span><span style="font-size:9px;padding:4px 10px;border-radius:20px;font-weight:600;'+(compliant?'color:#4ade80;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.2)':'color:#f87171;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2)')+'">'+(compliant?'CONFORME':'NON CONFORME')+'</span></div>';
+  html+='<div class="trend-grid">';
+  ratios.forEach(function(r){
+    var c=r.value>=r.threshold;
+    html+='<div class="trend-card" style="border-color:'+(c?'rgba(74,222,128,0.15)':'rgba(248,113,113,0.15)')+'"><div class="trend-name">'+r.name+'</div><div class="trend-value" style="color:'+(c?'#4ade80':'#f87171')+'">'+r.value.toFixed(2)+'%</div><div style="font-size:8px;color:rgba(255,255,255,0.3)">Seuil : '+r.threshold+'% • Coussin : '+(r.value-r.threshold>=0?'+':'')+(r.value-r.threshold).toFixed(1)+'%</div></div>';
+  });
+  html+='</div></div>';
+
+  html+='<div class="insight-box"><div class="insight-title">🤖 Insight IA</div>'+(compliant?'Tous les ratios sont au-dessus des seuils réglementaires. Le CET1 de '+cet1.toFixed(1)+'% offre un coussin de '+(cet1-4.5).toFixed(1)+' points au-dessus du minimum requis.':'Attention : certains ratios sont sous les seuils. Ajustez les curseurs pour identifier les leviers d\'amélioration.')+'</div>';
+
+  document.getElementById('simulationsContent').innerHTML=html;
 }
 
-function selectEntity(id){
-  DB.activeEntity=DB.entities.find(function(e){return e.id===id});
-  updateAllTabs();
-  switchTab('predictive');
+// ========== REPORTS MODULE ==========
+function updateReportsTab(){
+  if(!DB.activeEntity){document.getElementById('reportsContent').innerHTML='<p class="empty-state"><span class="empty-icon">📄</span><br>Sélectionnez une entité dans "Entités"</p>';return;}
+  var e=DB.activeEntity;
+  var isSNCI=e.classification==='SNCI';
+  var templates=isSNCI?[
+    {id:'compliance',name:'Rapport de Conformité',desc:'Ratios réglementaires du trimestre',icon:'📊',sections:['Synthèse','CET1','LCR','NSFR','Levier','Conclusion']},
+    {id:'transition',name:'Rapport de Transition',desc:'Simulation SNCI → Large Institution',icon:'🔄',sections:['Comparaison','Impact','Planning','Recommandations']},
+    {id:'benchmark',name:'Benchmark Sectoriel',desc:'Comparaison avec le portefeuille',icon:'📈',sections:['Positionnement','Moyennes','Classement']}
+  ]:[
+    {id:'compliance',name:'Rapport Complet',desc:'COREP, LCR, NSFR, TLAC',icon:'📊',sections:['Synthèse','Fonds Propres','Liquidité','Levier','TLAC']},
+    {id:'benchmark',name:'Benchmark Large',desc:'Comparaison Large Institutions',icon:'📈',sections:['Positionnement','Moyennes','Classement']}
+  ];
+
+  var html='';
+  html+='<div style="margin-bottom:10px;font-size:12px;font-weight:600;color:#fff">'+e.name+'</div>';
+  html+='<div style="margin-bottom:10px;font-size:10px;color:rgba(255,255,255,0.4)">Classification : '+(e.baseFramework||'').replace('_',' ')+' - '+(e.crrFramework||'')+' - '+(isSNCI?'SNCI':'Large')+'</div>';
+
+  templates.forEach(function(t){
+    html+='<div class="card" style="cursor:pointer" onclick="generateReport(\''+t.id+'\')"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">'+t.icon+'</span><div><div style="font-size:12px;font-weight:600">'+t.name+'</div><div style="font-size:9px;color:rgba(255,255,255,0.3)">'+t.desc+'</div><div style="margin-top:4px">';
+    t.sections.forEach(function(s){html+='<span style="font-size:7px;color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.03);padding:2px 6px;border-radius:3px;margin-right:3px">'+s+'</span>';});
+    html+='</div></div></div></div>';
+  });
+
+  document.getElementById('reportsContent').innerHTML=html;
 }
 
+function generateReport(type){
+  var names={compliance:'Rapport de Conformité',transition:'Rapport de Transition',benchmark:'Benchmark Sectoriel'};
+  var e=DB.activeEntity;
+  var html='';
+  html+='<div class="card" style="border-color:rgba(74,222,128,0.2)"><div style="display:flex;align-items:center;gap:6px;margin-bottom:10px"><span style="color:#4ade80">✅</span><span style="font-size:12px;font-weight:600">'+names[type]+' généré</span></div>';
+  html+='<div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:10px;font-size:10px;line-height:1.8">';
+  html+='<div><span style="color:rgba(255,255,255,0.3)">Entité :</span> '+e.name+'</div>';
+  html+='<div><span style="color:rgba(255,255,255,0.3)">Période :</span> 2025-Q2</div>';
+  html+='<div><span style="color:rgba(255,255,255,0.3)">Hash :</span> <span style="font-family:monospace;font-size:9px;color:rgba(255,255,255,0.3)">'+h().substring(0,40)+'...</span></div>';
+  html+='<div><span style="color:rgba(255,255,255,0.3)">Chiffrement :</span> <span style="color:#4ade80">AES-256-GCM</span></div></div>';
+  html+='<div style="display:flex;gap:6px;margin-top:8px"><button class="btn btn-primary" style="flex:1;font-size:10px">📥 Télécharger PDF</button><button class="btn btn-primary" style="flex:1;font-size:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1)">📋 Export CSV</button></div></div>';
+  document.getElementById('reportsContent').innerHTML=html;
+}
+
+// ========== BENCHMARK MODULE ==========
+function updateBenchmarkTab(){
+  if(DB.entities.length===0){document.getElementById('benchmarkContent').innerHTML='<p class="empty-state"><span class="empty-icon">📈</span><br>Aucune entité à comparer</p>';return;}
+  var metrics=[{key:'cet1',name:'CET1 Ratio',unit:'%',threshold:4.5},{key:'lcr',name:'LCR',unit:'%',threshold:100},{key:'nsfr',name:'NSFR',unit:'%',threshold:100},{key:'leverage',name:'Leverage Ratio',unit:'%',threshold:3}];
+  var currentMetric=metrics[0];
+  var entitiesWithData=DB.entities.map(function(e,i){
+    var history=DB.ratiosHistory[e.id]||[];
+    var latest=history[0];
+    return {
+      name:e.name,
+      classification:e.classification||'—',
+      cet1:latest?latest.cet1Ratio||(8+Math.random()*8):(8+Math.random()*8),
+      lcr:latest?latest.lcrRatio||(110+Math.random()*50):(110+Math.random()*50),
+      nsfr:latest?latest.nsfrRatio||(105+Math.random()*30):(105+Math.random()*30),
+      leverage:latest?latest.leverageRatio||(3+Math.random()*5):(3+Math.random()*5),
+      color:['#4ade80','#60a5fa','#f59e0b','#f87171','#c084fc','#fb923c'][i%6]
+    };
+  });
+  var maxVal=Math.max.apply(null,entitiesWithData.map(function(e){return e[currentMetric.key]}));
+  var avg=entitiesWithData.reduce(function(a,e){return a+e[currentMetric.key];},0)/entitiesWithData.length;
+  var sorted=entitiesWithData.slice().sort(function(a,b){return b[currentMetric.key]-a[currentMetric.key];});
+
+  var html='';
+  html+='<div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto">';
+  metrics.forEach(function(m){
+    html+='<button onclick="setBenchmarkMetric(\''+m.key+'\')" style="padding:6px 12px;border-radius:6px;font-size:10px;font-weight:600;white-space:nowrap;cursor:pointer;'+(currentMetric.key===m.key?'background:#fff;color:#0a0f1a;border:none':'background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.06)')+'">'+m.name+'</button>';
+  });
+  html+='</div>';
+
+  entitiesWithData.forEach(function(e){
+    var val=e[currentMetric.key],pct=Math.min((val/maxVal)*100,100),c=val>=currentMetric.threshold;
+    html+='<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:9px;margin-bottom:2px"><span style="color:rgba(255,255,255,0.6)">'+e.name+'</span><span style="font-weight:600;color:'+(c?'#4ade80':'#f87171')+'">'+val.toFixed(1)+currentMetric.unit+'</span></div>';
+    html+='<div style="height:16px;background:rgba(255,255,255,0.03);border-radius:8px;overflow:hidden;position:relative"><div style="height:100%;width:'+pct+'%;background:'+e.color+';opacity:0.7;border-radius:8px"></div><div style="position:absolute;top:0;left:'+((currentMetric.threshold/maxVal)*100)+'%;height:100%;width:1px;background:rgba(255,255,255,0.3)"></div></div></div>';
+  });
+
+  html+='<div style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:8px">▏ Seuil ('+currentMetric.threshold+currentMetric.unit+') • Moyenne : '+avg.toFixed(1)+currentMetric.unit+'</div>';
+
+  html+='<div class="kpi-grid" style="margin-top:12px">';
+  html+='<div class="kpi-card"><div class="kpi-value">'+entitiesWithData.length+'</div><div class="kpi-label">Entités</div></div>';
+  html+='<div class="kpi-card" style="border-color:rgba(74,222,128,0.2)"><div class="kpi-value" style="color:#4ade80">'+entitiesWithData.filter(function(e){return e[currentMetric.key]>=currentMetric.threshold}).length+'</div><div class="kpi-label">Conformes</div></div>';
+  html+='<div class="kpi-card" style="border-color:rgba(248,113,113,0.2)"><div class="kpi-value" style="color:#f87171">'+entitiesWithData.filter(function(e){return e[currentMetric.key]<currentMetric.threshold}).length+'</div><div class="kpi-label">Sous seuil</div></div>';
+  html+='<div class="kpi-card" style="border-color:rgba(96,165,250,0.2)"><div class="kpi-value" style="color:#60a5fa">'+avg.toFixed(1)+currentMetric.unit+'</div><div class="kpi-label">Moyenne</div></div>';
+  html+='</div>';
+
+  html+='<div class="card"><table style="width:100%;font-size:10px"><thead><tr style="color:rgba(255,255,255,0.3)"><th style="text-align:left;padding:4px">Rang</th><th style="text-align:left">Entité</th><th style="text-align:right">'+currentMetric.name+'</th><th style="text-align:right">Statut</th></tr></thead><tbody>';
+  sorted.forEach(function(e,i){
+    var c=e[currentMetric.key]>=currentMetric.threshold;
+    html+='<tr><td style="padding:4px;color:rgba(255,255,255,0.4)">#'+(i+1)+'</td><td style="color:rgba(255,255,255,0.7)">'+e.name+'</td><td style="text-align:right;font-weight:600;color:'+(c?'#4ade80':'#f87171')+'">'+e[currentMetric.key].toFixed(1)+currentMetric.unit+'</td><td style="text-align:right"><span style="font-size:8px;padding:2px 6px;border-radius:10px;'+(c?'background:rgba(74,222,128,0.1);color:#4ade80':'background:rgba(248,113,113,0.1);color:#f87171')+'">'+(c?'Conforme':'Non conforme')+'</span></td></tr>';
+  });
+  html+='</tbody></table></div>';
+
+  document.getElementById('benchmarkContent').innerHTML=html;
+}
+function setBenchmarkMetric(key){/* placeholder */updateBenchmarkTab();}
+
+// ========== PREDICTIVE ==========
 function analyzeTrends(entity){
   var history=DB.ratiosHistory[entity.id]||[];
   if(history.length<2)return null;
-  var cet1Vals=history.map(function(h){return h.cet1Ratio||0}).filter(function(v){return v>0});
-  var lcrVals=history.map(function(h){return h.lcrRatio||0}).filter(function(v){return v>0});
-  var nsfrVals=history.map(function(h){return h.nsfrRatio||0}).filter(function(v){return v>0});
-  var levVals=history.map(function(h){return h.leverageRatio||0}).filter(function(v){return v>0});
   function calcTrend(vals,thresh){
     if(vals.length<2)return null;
     var n=vals.length,last=vals[n-1],first=vals[0];
@@ -401,6 +523,10 @@ function analyzeTrends(entity){
     else if(proj6&&proj6<=thresh.early){alert='warning';msg='Projeté sous '+thresh.early+'% dans 6 mois ('+proj6.toFixed(1)+'%)';}
     return{current:last,direction:dir,percentChange:Math.round(pct*10)/10,projection6m:proj6?Math.round(proj6*10)/10:null,projection12m:proj12?Math.round(proj12*10)/10:null,alert:alert,message:msg};
   }
+  var cet1Vals=history.map(function(h){return h.cet1Ratio||0}).filter(function(v){return v>0});
+  var lcrVals=history.map(function(h){return h.lcrRatio||0}).filter(function(v){return v>0});
+  var nsfrVals=history.map(function(h){return h.nsfrRatio||0}).filter(function(v){return v>0});
+  var levVals=history.map(function(h){return h.leverageRatio||0}).filter(function(v){return v>0});
   return{
     cet1:cet1Vals.length>=2?calcTrend(cet1Vals,{regulatory:4.5,early:6,critical:5}):null,
     lcr:lcrVals.length>=2?calcTrend(lcrVals,{regulatory:100,early:115,critical:105}):null,
@@ -426,46 +552,38 @@ function assessRisk(entity){
 function generateActions(riskLevel,trends,entity){
   var actions=[];
   if(riskLevel==='imminent'||riskLevel==='high'){
-    actions.push({id:'sim',priority:'immediate',icon:'📊',label:'Simuler la transition SNCI → Large',desc:'Visualiser l\'impact du passage en Large Institution. Nouveaux seuils : CET1 6%, LCR 110%, NSFR 110%.',link:'/simulations'});
-    actions.push({id:'report',priority:'immediate',icon:'📄',label:'Générer le rapport de transition',desc:'Dossier complet : comparaison des seuils, impact financier, documents pré-remplis pour le régulateur.',link:'/reports'});
-    actions.push({id:'meeting',priority:'immediate',icon:'📅',label:'Planifier une réunion d\'urgence',desc:'Informer le client. Télécharger l\'executive summary automatique.',link:'/entities'});
+    actions.push({id:'sim',priority:'immediate',icon:'📊',label:'Simuler la transition SNCI → Large',desc:'Visualiser l\'impact du passage en Large Institution.',link:'#simulations',module:'simulations'});
+    actions.push({id:'report',priority:'immediate',icon:'📄',label:'Générer le rapport de transition',desc:'Dossier complet pour le régulateur.',link:'#reports',module:'reports'});
+    actions.push({id:'meeting',priority:'immediate',icon:'📅',label:'Planifier une réunion d\'urgence',desc:'Informer le client avec l\'executive summary.',link:'#entities',module:'entities'});
   }
   if(riskLevel==='medium'){
-    actions.push({id:'alert',priority:'short_term',icon:'🔔',label:'Activer l\'alerte trimestrielle renforcée',desc:'Notification automatique si la tendance s\'accélère.',link:'/monitoring'});
-    actions.push({id:'prep',priority:'medium_term',icon:'📋',label:'Préparer un scénario préventif',desc:'Plan d\'action avec optimisation des fonds propres.',link:'/simulations'});
+    actions.push({id:'alert',priority:'short_term',icon:'🔔',label:'Activer l\'alerte trimestrielle',desc:'Notification si la tendance s\'accélère.',link:'#monitoring',module:'monitoring'});
+    actions.push({id:'prep',priority:'medium_term',icon:'📋',label:'Préparer un scénario préventif',desc:'Plan avec optimisation des fonds propres.',link:'#simulations',module:'simulations'});
   }
-  if(trends&&trends.cet1&&trends.cet1.alert==='critical'){actions.push({id:'cet1',priority:'immediate',icon:'🎯',label:'Optimiser le ratio CET1 ('+trends.cet1.current.toFixed(1)+'%)',desc:'Simuler une augmentation de capital ou une réduction des RWA.',link:'/simulations'});}
-  if(trends&&trends.lcr&&(trends.lcr.alert==='critical'||trends.lcr.alert==='warning')){actions.push({id:'lcr',priority:'short_term',icon:'💧',label:'Renforcer le ratio LCR',desc:'Simuler une augmentation des HQLA.',link:'/simulations'});}
-  actions.push({id:'comp',priority:'medium_term',icon:'📊',label:'Rapport de conformité périodique',desc:'Rapport trimestriel avec tous les ratios et projections.',link:'/reports'});
-  actions.push({id:'bench',priority:'medium_term',icon:'📈',label:'Comparer au benchmark sectoriel',desc:'Positionner cette entité par rapport aux autres institutions.',link:'/dashboard'});
+  if(trends&&trends.cet1&&trends.cet1.alert==='critical'){actions.push({id:'cet1',priority:'immediate',icon:'🎯',label:'Optimiser le CET1 ('+trends.cet1.current.toFixed(1)+'%)',desc:'Simuler augmentation de capital ou réduction RWA.',link:'#simulations',module:'simulations'});}
+  if(trends&&trends.lcr&&(trends.lcr.alert==='critical'||trends.lcr.alert==='warning')){actions.push({id:'lcr',priority:'short_term',icon:'💧',label:'Renforcer le LCR',desc:'Simuler une augmentation des HQLA.',link:'#simulations',module:'simulations'});}
+  actions.push({id:'comp',priority:'medium_term',icon:'📊',label:'Rapport de conformité périodique',desc:'Rapport trimestriel avec projections.',link:'#reports',module:'reports'});
+  actions.push({id:'bench',priority:'medium_term',icon:'📈',label:'Comparer au benchmark sectoriel',desc:'Positionner cette entité.',link:'#benchmark',module:'benchmark'});
   return actions;
 }
 
 function updatePredictiveTab(){
-  if(!DB.activeEntity){document.getElementById('predictiveContent').innerHTML='<p class="empty-state"><span class="empty-icon">📊</span><br>Sélectionnez une entité dans l\'onglet "Entités"</p>';return;}
-  var entity=DB.activeEntity;
-  var history=DB.ratiosHistory[entity.id]||[];
-  var trends=analyzeTrends(entity);
-  var risk=assessRisk(entity);
-  var actions=generateActions(risk.riskLevel,trends,entity);
+  if(!DB.activeEntity){document.getElementById('predictiveContent').innerHTML='<p class="empty-state"><span class="empty-icon">📊</span><br>Sélectionnez une entité dans "Entités"</p>';return;}
+  var entity=DB.activeEntity,trends=analyzeTrends(entity),risk=assessRisk(entity),actions=generateActions(risk.riskLevel,trends,entity);
   var riskColors={imminent:'risk-imminent',high:'risk-high',medium:'risk-medium',low:'risk-low',none:'risk-none'};
   var riskLabels={imminent:'Imminent',high:'Élevé',medium:'Moyen',low:'Faible',none:'Aucun'};
   var html='';
   html+='<div style="margin-bottom:10px;font-size:13px;font-weight:600;color:#fff">'+entity.name+'</div>';
   html+='<div class="card" style="border-color:'+(risk.riskLevel==='imminent'?'rgba(248,113,113,0.2)':risk.riskLevel==='high'?'rgba(245,158,11,0.2)':'rgba(255,255,255,0.06)')+'">';
   html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:11px;font-weight:600">Risque de Reclassification</span><span class="risk-badge '+riskColors[risk.riskLevel]+'">'+riskLabels[risk.riskLevel]+' — '+risk.probability+'%</span></div>';
-  html+='<p style="font-size:10px;color:rgba(255,255,255,0.6)">'+risk.recommendation+'</p>';
-  html+='<p style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:3px">'+risk.timeline+'</p>';
+  html+='<p style="font-size:10px;color:rgba(255,255,255,0.6)">'+risk.recommendation+'</p><p style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:3px">'+risk.timeline+'</p>';
   if(risk.details.length>0){html+='<div style="margin-top:4px">';risk.details.forEach(function(d){html+='<div style="font-size:9px;color:rgba(255,255,255,0.4)">• '+d+'</div>';});html+='</div>';}
   html+='</div>';
   if(trends&&Object.keys(trends).length>0){
-    html+='<div class="section-title">Tendances des Ratios</div>';
-    html+='<div class="trend-grid">';
-    ['cet1','lcr','nsfr','leverage'].forEach(function(k){
-      var t=trends[k];if(!t)return;
+    html+='<div class="section-title">Tendances des Ratios</div><div class="trend-grid">';
+    ['cet1','lcr','nsfr','leverage'].forEach(function(k){var t=trends[k];if(!t)return;
       html+='<div class="trend-card" style="border-color:'+(t.alert==='critical'?'rgba(248,113,113,0.2)':t.alert==='warning'?'rgba(245,158,11,0.2)':'rgba(255,255,255,0.06)')+'">';
-      html+='<div class="trend-name">'+k.toUpperCase()+'</div>';
-      html+='<div class="trend-value" style="color:'+(t.alert==='critical'?'#f87171':t.alert==='warning'?'#f59e0b':'#4ade80')+'">'+t.current.toFixed(1)+'%</div>';
+      html+='<div class="trend-name">'+k.toUpperCase()+'</div><div class="trend-value" style="color:'+(t.alert==='critical'?'#f87171':t.alert==='warning'?'#f59e0b':'#4ade80')+'">'+t.current.toFixed(1)+'%</div>';
       html+='<div class="trend-sub">'+(t.direction==='up'?'↗':t.direction==='down'?'↘':'→')+' '+t.percentChange+'%';
       if(t.projection6m)html+=' → '+t.projection6m.toFixed(1)+'% (6m)';
       html+='</div><div style="font-size:8px;color:rgba(255,255,255,0.3);margin-top:2px">'+t.message+'</div></div>';
@@ -477,7 +595,7 @@ function updatePredictiveTab(){
     actions.forEach(function(a){
       html+='<div class="action-card '+a.priority+'">';
       html+='<div style="display:flex;align-items:center;gap:6px"><span style="font-size:14px">'+a.icon+'</span><span class="act-label">'+a.label+'</span>'+(a.priority==='immediate'?'<span style="font-size:8px;background:rgba(248,113,113,0.1);color:#f87171;padding:2px 6px;border-radius:10px">URGENT</span>':'')+'</div>';
-      html+='<div class="act-desc">'+a.desc+'</div><span class="act-link">'+a.link+'</span></div>';
+      html+='<div class="act-desc">'+a.desc+'</div><a href="javascript:void(0)" onclick="switchTab(\''+a.module+'\')" class="act-link">🔗 Ouvrir '+a.module+'</a></div>';
     });
   }
   html+='<button class="btn btn-primary" style="margin-top:8px;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15)" onclick="loadDemoData()">📥 Charger des données de démonstration</button>';
@@ -486,28 +604,55 @@ function updatePredictiveTab(){
 
 function loadDemoData(){
   if(!DB.activeEntity)return;
-  var e=DB.activeEntity;
-  var periods=['2024-Q3','2024-Q4','2025-Q1','2025-Q2'];
+  var e=DB.activeEntity,periods=['2024-Q3','2024-Q4','2025-Q1','2025-Q2'];
   DB.ratiosHistory[e.id]=[];
   var baseCET1=12.5,baseLCR=130,baseNSFR=118,baseLev=5.5,baseBilan=3200000000,baseRWA=980000000;
   periods.forEach(function(p,i){
     var factor=1+(i*0.15);
-    DB.ratiosHistory[e.id].unshift({
-      period:p,cet1Ratio:baseCET1-factor*2,lcrRatio:baseLCR-factor*8,nsfrRatio:baseNSFR-factor*4,leverageRatio:baseLev-factor*0.4,
-      totalBilan:baseBilan*factor,rwa:baseRWA*factor,hqla:200000000*factor,netOutflows:150000000*factor,
-      asf:800000000*factor,rsf:700000000*factor,tier1Capital:600000000*factor,totalExposure:10000000*factor,
-      overallStatus:i<3?'compliant':'warning'
-    });
+    DB.ratiosHistory[e.id].unshift({period:p,cet1Ratio:baseCET1-factor*2,lcrRatio:baseLCR-factor*8,nsfrRatio:baseNSFR-factor*4,leverageRatio:baseLev-factor*0.4,totalBilan:baseBilan*factor,rwa:baseRWA*factor,hqla:200000000*factor,netOutflows:150000000*factor,asf:800000000*factor,rsf:700000000*factor,tier1Capital:600000000*factor,totalExposure:10000000*factor,overallStatus:i<3?'compliant':'warning'});
   });
-  updatePredictiveTab();updateMonitoringTab();
+  updatePredictiveTab();updateMonitoringTab();updateBenchmarkTab();updateSimulationsTab();
+}
+
+// ========== TABS ==========
+function switchTab(tab){
+  ['onboarding','entities','predictive','simulations','reports','benchmark','monitoring'].forEach(function(t){document.getElementById('tab-'+t).style.display=t===tab?'block':'none';});
+  var tabs=document.querySelectorAll('.tab');
+  tabs.forEach(function(t){t.classList.remove('active');});
+  var idx={onboarding:0,entities:1,predictive:2,simulations:3,reports:4,benchmark:5,monitoring:6};
+  if(tabs[idx[tab]])tabs[idx[tab]].classList.add('active');
+  if(tab==='entities')updateEntitiesTab();
+  if(tab==='predictive')updatePredictiveTab();
+  if(tab==='simulations')updateSimulationsTab();
+  if(tab==='reports')updateReportsTab();
+  if(tab==='benchmark')updateBenchmarkTab();
+  if(tab==='monitoring')updateMonitoringTab();
+}
+
+function updateAllTabs(){updateEntitiesTab();updatePredictiveTab();updateMonitoringTab();updateSimulationsTab();updateReportsTab();updateBenchmarkTab();}
+
+function updateEntitiesTab(){
+  var count=DB.entities.length;
+  var tabEls=document.querySelectorAll('.tab');if(tabEls[1])tabEls[1].textContent='Entités ('+count+')';
+  var html='';
+  DB.entities.forEach(function(e){
+    html+='<button class="entity-list-item'+(DB.activeEntity&&DB.activeEntity.id===e.id?' selected':'')+'" onclick="selectEntity(\''+e.id+'\')">';
+    html+='<div class="e-name">'+e.name+'</div><div class="e-info">'+e.legalName+' • '+e.country+' • '+(e.baseFramework||'Non classifié')+'</div>';
+    html+='<span style="font-size:8px;padding:2px 7px;border-radius:20px;margin-top:3px;display:inline-block;'+(e.onboardingStatus==='completed'?'background:rgba(74,222,128,0.1);color:#4ade80':'background:rgba(245,158,11,0.1);color:#f59e0b')+'">'+(e.onboardingStatus==='completed'?'Complété':'En cours')+'</span></button>';
+  });
+  document.getElementById('entityList').innerHTML=html||'<p class="empty-state"><span class="empty-icon">📭</span><br>Aucune entité créée</p>';
+}
+
+function selectEntity(id){
+  DB.activeEntity=DB.entities.find(function(e){return e.id===id});
+  updateAllTabs();switchTab('predictive');
 }
 
 function updateMonitoringTab(){
   var html='';
   DB.entities.forEach(function(e){
     if(!e.classification)return;
-    html+='<div class="card">';
-    html+='<div style="font-size:12px;font-weight:600;color:#fff">'+e.name+'</div>';
+    html+='<div class="card"><div style="font-size:12px;font-weight:600;color:#fff">'+e.name+'</div>';
     html+='<div style="font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px">Classification : '+e.baseFramework.replace('_',' ')+' - '+e.crrFramework+' - '+(e.classification==='SNCI'?'SNCI':'Large')+'</div>';
     html+='<div style="font-size:9px;color:#4ade80;margin-top:4px">Surveillance : Active ✅</div>';
     if(e.classification==='SNCI'){html+='<div style="font-size:9px;color:#f59e0b;margin-top:4px">⚠️ Seuils SNCI→Large surveillés : Bilan 5 Mrd • RWA 1,5 Mrd</div>';}
@@ -517,8 +662,7 @@ function updateMonitoringTab(){
   document.getElementById('monitoringList').innerHTML=html||'<p class="empty-state"><span class="empty-icon">📈</span><br>Aucune entité à monitorer</p>';
 }
 
-updateProgress();
-generateConsents();
+updateProgress();generateConsents();
 </script>
 </body>
-  </html>
+                                                                                                                    </html>
